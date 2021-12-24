@@ -34,22 +34,28 @@ namespace ContinuationTasksDemo
         static int BinarySearch(List<int> numbers,int ToFind)
         {
             int left = 0;
-            int right = numbers.Count;
+            int right = numbers.Count-1;
             while (left <= right)
             {
-                var mid = numbers.Count / 2;
+                var mid = (right +left) / 2;
                 if (ToFind == numbers[mid])
+                {
                     return mid;
+                }
                 else if (ToFind < numbers[mid])
+                {
                     right = mid - 1;
+                }
                 else
+                {
                     left = mid + 1;
+                }
             }
             return -1;
         }
         static void Main(string[] args)
         {
-            int valueToFind = 23;
+            int valueToFind = 17;
 
             Console.WriteLine("Main thread start");
             List<int> numbers = new List<int>();
@@ -65,12 +71,13 @@ namespace ContinuationTasksDemo
             //Task task2 = task1.ContinueWith(sum => Display(sum.Result));
             Task<List<int>> task2 = task1.ContinueWith((res) =>  SortValues(res.Result) );
 
-            Task<int> task3 = task1.ContinueWith((res) =>  BinarySearch(res.Result, valueToFind) );
-
+            Task<int> task3 = task2.ContinueWith((res) =>  BinarySearch(res.Result, valueToFind) );
 
             DisplayList(task2.Result);
+
+            task3.Wait();
             Console.WriteLine("========================");
-            if(valueToFind!=-1)
+            if(task3.Result!=-1)
                 Console.WriteLine($"{valueToFind} finded on {task3.Result}");
             else
                 Console.WriteLine($"{valueToFind} not finded");
