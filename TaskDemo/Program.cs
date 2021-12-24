@@ -27,23 +27,41 @@ namespace TaskDemo
         static int FindMax(List<int> numbers)
         {
             int max = 0;
-
+            if(numbers.Count> 0)
+            {
+                max = numbers[0];
+                for (int i = 0; i < numbers.Count; i++)
+                {
+                    if (max < numbers[i])
+                    {
+                        max = numbers[i];
+                    }
+                }
+            }
             return max;
-        }
-
-        static int FindAvg(List<int> numbers)
-        {
-            int avg = 0;
-
-            return avg;
         }
 
         static int FindSum(List<int> numbers)
         {
             int sum = 0;
-
+            for(int i = 0; i < numbers.Count; i++)
+            {
+                sum += numbers[i];
+            }
             return sum;
         }
+
+        static float FindAvg(List<int> numbers)
+        {
+            float avg = 0;
+
+            int sum = FindSum(numbers);
+            avg = sum / numbers.Count;
+            avg = (float)(Math.Round((double)avg, 2));
+            return avg;
+        }
+
+        
 
         static void Main(string[] args)
         {
@@ -51,13 +69,13 @@ namespace TaskDemo
             Random random= new Random();
             for (int i = 0; i < 100; i++)
             {
-                numbers.Add(random.Next(1000));
+                numbers.Add(random.Next(1001));
             }
-            Task<int>[] tasks = new Task<int>[4];
-            tasks[0] = new Task<int>(() => { return FindMin(numbers); });
-            tasks[1] = new Task<int>(() => { return FindMax(numbers); });
-            tasks[2] = new Task<int>(() => { return FindAvg(numbers); });
-            tasks[3] = new Task<int>(() => { return FindSum(numbers); });
+            Task<float>[] tasks = new Task<float>[4];
+            tasks[0] = new Task<float>(() => { return FindMin(numbers); });
+            tasks[1] = new Task<float>(() => { return FindMax(numbers); });
+            tasks[2] = new Task<float>(() => { return FindAvg(numbers); });
+            tasks[3] = new Task<float>(() => { return FindSum(numbers); });
 
             for(int i = 0; i < tasks.Length; i++)
             {
